@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, useCallback } from 'react'
 import { LayoutGrid } from 'lucide-react'
 import { WorkspaceBlock } from './WorkspaceBlock'
 import { TaskSetBlock } from './TaskSetBlock'
-import type { Block, BlockType, TaskBlock, TaskSetBlock as TaskSetBlockType } from '@/lib/types'
+import type { Block, BlockType, TaskBlock } from '@/lib/types'
 import { isConnectable } from '@/lib/types'
 
 type Props = {
@@ -61,8 +61,6 @@ function setMouthHighlight(taskSetId: string | null, blocks: Block[]) {
     el.style.outlineOffset = ''
   })
   if (taskSetId) {
-    const ts = blocks.find(b => b.id === taskSetId)
-    const colors = ts ? `2px dashed #0d9488` : ''
     const el = document.querySelector<HTMLElement>(`[data-taskset-mouth="${taskSetId}"]`)
     if (el) {
       el.style.outline = '2px dashed #0d9488'

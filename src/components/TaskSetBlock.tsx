@@ -3,7 +3,7 @@ import { GripVertical, Trash2, ArrowUpRight, Plus, ChevronDown, ChevronRight } f
 import { TaskFields } from './BlockFields/TaskFields'
 import { BLOCK_COLORS } from '@/lib/blockColors'
 import { KNOB_H, KNOB_W, KNOB_LEFT } from './WorkspaceBlock'
-import type { TaskSetBlock, TaskBlock, Grader } from '@/lib/types'
+import type { TaskSetBlock, TaskBlock } from '@/lib/types'
 
 const ARM_W = 20         // width of the left arm of the C
 const TASKSET_W = 340    // outer width of the C-block
@@ -116,7 +116,6 @@ export function TaskSetBlock({ block, onUpdate, onDelete, onGripMouseDown, onPop
 
   const addChildTask = () => {
     const id = crypto.randomUUID()
-    const now = crypto.randomUUID()
     const newTask: TaskBlock = { id, type: 'task', prompt: '', graders: [], x: 0, y: 0 }
     onUpdate({ children: [...block.children, newTask] })
   }

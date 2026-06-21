@@ -5,7 +5,7 @@ import { Separator } from '@/components/ui/separator'
 import { BlocksTab } from '@/components/BlocksTab'
 import { WorkspaceTab } from '@/components/WorkspaceTab'
 import { CompletenessChecker } from '@/components/CompletenessChecker'
-import { TutorialOverlay, useTutorial } from '@/components/TutorialOverlay'
+import { useTutorial } from '@/components/TutorialOverlay'
 import { serializeWorkspace } from '@/lib/serialize'
 import { compileEnv } from '@/lib/api'
 import { upsertEnv, type SavedEnv } from '@/lib/storage'
@@ -44,7 +44,7 @@ export function BuilderPage({ initial, onBack }: Props) {
   const [savedFlash, setSavedFlash] = useState(false)
   const nameRef = useRef<HTMLInputElement>(null)
 
-  const { visible: tutorialVisible, dismiss: dismissTutorial, show: showTutorial } = useTutorial()
+  const { show: showTutorial } = useTutorial()
   const workspaceJSON = useMemo(() => serializeWorkspace(blocks), [blocks])
   const envBlockExists = blocks.some(b => b.type === 'env')
 
