@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { GripVertical, Trash2, ArrowUpRight, Plus, ChevronDown, ChevronRight } from 'lucide-react'
 import { TaskFields } from './BlockFields/TaskFields'
 import { BLOCK_COLORS } from '@/lib/blockColors'
-import { KNOB_H, KNOB_W, KNOB_LEFT } from './WorkspaceBlock'
+import { KNOB_H, KNOB_W, KNOB_LEFT, BlockSocket, BlockPeg } from './WorkspaceBlock'
 import type { TaskSetBlock, TaskBlock } from '@/lib/types'
 
 const ARM_W = 20         // width of the left arm of the C
@@ -155,18 +155,7 @@ export function TaskSetBlock({ block, onUpdate, onDelete, onGripMouseDown, onPop
       style={{ paddingTop: KNOB_H, width: TASKSET_W }}
       onMouseDown={e => e.stopPropagation()}
     >
-      {/* Top socket */}
-      <div
-        data-block-socket={block.id}
-        className="absolute"
-        style={{
-          top: 0, left: KNOB_LEFT,
-          width: KNOB_W, height: KNOB_H,
-          background: 'rgba(0,0,0,0.38)',
-          borderRadius: '5px 5px 0 0',
-          boxShadow: 'inset 0 4px 8px rgba(0,0,0,0.55), inset 0 1px 3px rgba(0,0,0,0.4)',
-        }}
-      />
+      <BlockSocket id={block.id} />
 
       {/* Header */}
       <div
@@ -283,19 +272,7 @@ export function TaskSetBlock({ block, onUpdate, onDelete, onGripMouseDown, onPop
         </>
       )}
 
-      {/* Bottom peg */}
-      <div
-        data-block-peg={block.id}
-        className="absolute"
-        style={{
-          bottom: -KNOB_H, left: KNOB_LEFT,
-          width: KNOB_W, height: KNOB_H,
-          backgroundColor: colors.bg,
-          borderRadius: '0 0 6px 6px',
-          boxShadow: `0 6px 0 ${colors.dark}, inset 0 2px 0 rgba(255,255,255,0.2), inset -2px 0 0 rgba(0,0,0,0.1), inset 2px 0 0 rgba(255,255,255,0.08)`,
-          zIndex: 2,
-        }}
-      />
+      <BlockPeg id={block.id} colors={colors} />
     </div>
   )
 }

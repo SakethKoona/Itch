@@ -12,6 +12,40 @@ export const KNOB_H = 12
 export const KNOB_W = 40
 export const KNOB_LEFT = 18
 
+const TAPER = 3  // px narrower on each side at bottom — gives 3D trapezoid silhouette
+
+export function BlockSocket({ id }: { id: string }) {
+  const W = KNOB_W, H = KNOB_H, T = TAPER
+  const cavity = `M 0,0 L ${W},0 L ${W - T},${H} L ${T},${H} Z`
+  return (
+    <svg
+      data-block-socket={id}
+      width={W} height={H}
+      style={{ position: 'absolute', top: 0, left: KNOB_LEFT, display: 'block' }}
+    >
+      <path d={cavity} fill="rgba(0,0,0,0.28)" />
+    </svg>
+  )
+}
+
+export function BlockPeg({ id, colors }: { id: string; colors: { bg: string; dark: string } }) {
+  const W = KNOB_W, H = KNOB_H, T = TAPER
+  const peg = `M 0,0 L ${W},0 L ${W - T},${H} L ${T},${H} Z`
+  return (
+    <svg
+      data-block-peg={id}
+      width={W} height={H}
+      style={{
+        position: 'absolute', bottom: -H, left: KNOB_LEFT,
+        overflow: 'visible', zIndex: 2, display: 'block',
+        filter: `drop-shadow(0 5px 0 ${colors.dark})`,
+      }}
+    >
+      <path d={peg} fill={colors.bg} />
+    </svg>
+  )
+}
+
 type Props = {
   block: Block
   taskIndex?: number
@@ -58,20 +92,7 @@ export function WorkspaceBlock({ block, taskIndex, onUpdate, onDelete, onGripMou
       style={{ paddingTop: showTopSocket ? KNOB_H : 0 }}
       onMouseDown={e => e.stopPropagation()}
     >
-      {/* Top socket — a recessed hole the peg above slots into */}
-      {showTopSocket && (
-        <div
-          data-block-socket={block.id}
-          className="absolute"
-          style={{
-            top: 0, left: KNOB_LEFT,
-            width: KNOB_W, height: KNOB_H,
-            background: 'rgba(0,0,0,0.38)',
-            borderRadius: '5px 5px 0 0',
-            boxShadow: 'inset 0 4px 8px rgba(0,0,0,0.55), inset 0 1px 3px rgba(0,0,0,0.4)',
-          }}
-        />
-      )}
+      {showTopSocket && <BlockSocket id={block.id} />}
 
       {/* Main block */}
       <div
@@ -140,21 +161,7 @@ export function WorkspaceBlock({ block, taskIndex, onUpdate, onDelete, onGripMou
         )}
       </div>
 
-      {/* Bottom peg — raised tab that slots into the socket below */}
-      {connectable && (
-        <div
-          data-block-peg={block.id}
-          className="absolute"
-          style={{
-            bottom: -KNOB_H, left: KNOB_LEFT,
-            width: KNOB_W, height: KNOB_H,
-            backgroundColor: colors.bg,
-            borderRadius: '0 0 6px 6px',
-            boxShadow: `0 6px 0 ${colors.dark}, inset 0 2px 0 rgba(255,255,255,0.2), inset -2px 0 0 rgba(0,0,0,0.1), inset 2px 0 0 rgba(255,255,255,0.08)`,
-            zIndex: 2,
-          }}
-        />
-      )}
+      {connectable && <BlockPeg id={block.id} colors={colors} />}
     </div>
   )
 }
