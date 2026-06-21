@@ -4,7 +4,6 @@ export type EnvTemplate = {
   id: string
   name: string
   tagline: string
-  icon: string
   blocks: Block[]
 }
 
@@ -13,7 +12,6 @@ export const TEMPLATES: EnvTemplate[] = [
     id: 'tpl-inventory',
     name: 'Inventory Manager',
     tagline: 'Agent monitors stock and places restocking orders',
-    icon: '📦',
     blocks: [
       {
         id: 'tpl-inv-env', type: 'env', x: 40, y: 40,
@@ -52,7 +50,6 @@ export const TEMPLATES: EnvTemplate[] = [
     id: 'tpl-support',
     name: 'Customer Support',
     tagline: 'Agent resolves support tickets using account data',
-    icon: '🎧',
     blocks: [
       {
         id: 'tpl-sup-env', type: 'env', x: 40, y: 40,
@@ -91,7 +88,6 @@ export const TEMPLATES: EnvTemplate[] = [
     id: 'tpl-research',
     name: 'Research Assistant',
     tagline: 'Agent searches and synthesizes information to answer questions',
-    icon: '🔬',
     blocks: [
       {
         id: 'tpl-res-env', type: 'env', x: 40, y: 40,

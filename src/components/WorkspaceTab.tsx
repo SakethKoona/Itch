@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { LayoutGrid } from 'lucide-react'
-import { WorkspaceBlock, KNOB_H } from './WorkspaceBlock'
+import { WorkspaceBlock } from './WorkspaceBlock'
 import { TaskSetBlock } from './TaskSetBlock'
 import type { Block, BlockType, TaskBlock, TaskSetBlock as TaskSetBlockType } from '@/lib/types'
 import { isConnectable } from '@/lib/types'
@@ -71,11 +71,11 @@ function setMouthHighlight(taskSetId: string | null, blocks: Block[]) {
   }
 }
 
-// Glow the peg or socket of the snap target (direct DOM — no re-render)
+// Glow the peg or socket of the snap target
 function applySnapGlow(id: string, attr: 'data-block-peg' | 'data-block-socket') {
   const el = document.querySelector<HTMLElement>(`[${attr}="${id}"]`)
   if (el) {
-    el.style.boxShadow = '0 0 0 2px rgba(255,255,255,0.9), 0 0 10px 3px rgba(255,255,255,0.5)'
+    el.style.boxShadow = '0 0 0 2px rgba(255,255,255,0.95), 0 0 12px 4px rgba(255,255,255,0.6)'
     el.style.transition = 'box-shadow 0.08s ease'
   }
 }
@@ -93,7 +93,7 @@ function clearSnapGlow(ref: { id: string; attr: string } | null) {
 function applyDragLift(ids: string[]) {
   ids.forEach(id => {
     const el = document.querySelector<HTMLElement>(`[data-block-id="${id}"]`)
-    if (el) el.style.filter = 'drop-shadow(0 12px 20px rgba(0,0,0,0.45))'
+    if (el) el.style.filter = 'drop-shadow(0 14px 24px rgba(0,0,0,0.45))'
   })
 }
 
@@ -312,19 +312,9 @@ export function WorkspaceTab({
     <div
       className="relative w-full h-full overflow-hidden"
       style={{
-        backgroundColor: 'oklch(0.94 0 0)',
-        backgroundImage: [
-          'linear-gradient(to right,  rgba(0,0,0,0.055) 1px, transparent 1px)',
-          'linear-gradient(to bottom, rgba(0,0,0,0.055) 1px, transparent 1px)',
-          'linear-gradient(to right,  rgba(0,0,0,0.03)  1px, transparent 1px)',
-          'linear-gradient(to bottom, rgba(0,0,0,0.03)  1px, transparent 1px)',
-        ].join(', '),
-        backgroundSize: [
-          `${120 * view.scale}px ${120 * view.scale}px`,
-          `${120 * view.scale}px ${120 * view.scale}px`,
-          `${24  * view.scale}px ${24  * view.scale}px`,
-          `${24  * view.scale}px ${24  * view.scale}px`,
-        ].join(', '),
+        backgroundColor: 'oklch(0.94 0.016 82)',
+        backgroundImage: 'radial-gradient(oklch(0.16 0.035 58 / 0.09) 1.4px, transparent 1.4px)',
+        backgroundSize: `${24 * view.scale}px ${24 * view.scale}px`,
         backgroundPosition: `${view.x}px ${view.y}px`,
       }}
     >

@@ -7,12 +7,12 @@ export type BlockColors = {
 }
 
 export const BLOCK_COLORS: Record<AnyBlockType, BlockColors> = {
-  env:            { bg: '#8b5cf6', dark: '#5b21b6', light: '#f5f3ff' },
-  tool:           { bg: '#3b82f6', dark: '#1e40af', light: '#eff6ff' },
-  task:           { bg: '#10b981', dark: '#065f46', light: '#ecfdf5' },
-  taskset:        { bg: '#0d9488', dark: '#115e59', light: '#f0fdfa' },
-  database:       { bg: '#f97316', dark: '#c2410c', light: '#fff7ed' },
-  'tool-input':   { bg: '#6366f1', dark: '#3730a3', light: '#eef2ff' },
-  'answer-check': { bg: '#f43f5e', dark: '#9f1239', light: '#fff1f2' },
-  'state-check':  { bg: '#f59e0b', dark: '#92400e', light: '#fffbeb' },
+  env:            { bg: '#BE5A2E', dark: '#924824', light: '#f7ebe6' },
+  tool:           { bg: '#3F7A74', dark: '#395e56', light: '#e8efee' },
+  task:           { bg: '#B26B74', dark: '#8a5456', light: '#f5edee' },
+  taskset:        { bg: '#9C4A55', dark: '#7a3d41', light: '#f3e9ea' },
+  database:       { bg: '#B07D2A', dark: '#886122', light: '#f5efe5' },
+  'tool-input':   { bg: '#5A7691', dark: '#4c5c6b', light: '#ebeef1' },
+  'answer-check': { bg: '#B0503E', dark: '#884130', light: '#f5eae7' },
+  'state-check':  { bg: '#4F8A5B', dark: '#446a45', light: '#eaf1eb' },
 }

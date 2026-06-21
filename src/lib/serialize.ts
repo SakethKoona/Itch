@@ -1,5 +1,4 @@
-import type { Block, Grader, TaskBlock, DatabaseBlock, ToolInput } from './types'
-import type { TrainingConfig } from '@/components/TrainingPanel'
+import type { Block, Grader, TaskBlock, ToolInput } from './types'
 
 // ─── JSON types ────────────────────────────────────────────────────────────
 export type GraderJSON = {
@@ -18,7 +17,6 @@ export type BlockJSON = EnvBlockJSON | ToolBlockJSON | TaskBlockJSON | TaskSetBl
 
 export type WorkspaceJSON = {
   version: 1
-  training: TrainingConfig
   blocks: BlockJSON[]
 }
 
@@ -30,10 +28,9 @@ function serializeTask(task: TaskBlock): TaskBlockJSON {
   return { type: 'task', prompt: task.prompt, graders: task.graders.map(serializeGrader) }
 }
 
-export function serializeWorkspace(blocks: Block[], training: TrainingConfig): WorkspaceJSON {
+export function serializeWorkspace(blocks: Block[]): WorkspaceJSON {
   return {
     version: 1,
-    training,
     blocks: blocks.map(block => {
       if (block.type === 'env')  return { type: 'env', description: block.description }
       if (block.type === 'tool') return {

@@ -1,57 +1,29 @@
 import { useState, useMemo, useRef } from 'react'
-import { ArrowLeft, Loader2, Check } from 'lucide-react'
+import { ArrowLeft, Loader2, Check, HelpCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { BlocksTab } from '@/components/BlocksTab'
 import { WorkspaceTab } from '@/components/WorkspaceTab'
-import { OutputsTab } from '@/components/OutputsTab'
 import { CompletenessChecker } from '@/components/CompletenessChecker'
-import { TrainingPanel, DEFAULT_TRAINING, type TrainingConfig } from '@/components/TrainingPanel'
+import { TutorialOverlay, useTutorial } from '@/components/TutorialOverlay'
 import { serializeWorkspace } from '@/lib/serialize'
 import { compileEnv } from '@/lib/api'
 import { upsertEnv, type SavedEnv } from '@/lib/storage'
 import type { Block, BlockType, TaskBlock, TaskSetBlock } from '@/lib/types'
 
-// ── Right-panel tabs ──────────────────────────────────────────────────────────
+// ── Right panel ───────────────────────────────────────────────────────────────
 
-const RIGHT_TABS = ['JSON', 'Outputs'] as const
-type RightTab = typeof RIGHT_TABS[number]
-
-function RightTabs({ workspaceJSON }: { workspaceJSON: ReturnType<typeof serializeWorkspace> }) {
-  const [active, setActive] = useState<RightTab>('JSON')
+function RightPanel() {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      {/* Tab bar */}
-      <div className="flex shrink-0 border-b border-border">
-        {RIGHT_TABS.map(tab => (
-          <button
-            key={tab}
-            type="button"
-            onClick={() => setActive(tab)}
-            className="flex-1 py-2 text-[11px] font-semibold transition-colors"
-            style={{
-              borderBottom: active === tab ? '2px solid #2563eb' : '2px solid transparent',
-              color: active === tab ? '#2563eb' : '#94a3b8',
-            }}
-          >
-            {tab}
-          </button>
-        ))}
+      <div className="shrink-0 px-4 py-2.5 border-b border-border">
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Results</p>
       </div>
-
-      {/* Tab content */}
-      <div className="flex-1 overflow-y-auto">
-        {active === 'JSON' && (
-          <div className="p-3">
-            <OutputsTab workspaceJSON={workspaceJSON} />
-          </div>
-        )}
-        {active === 'Outputs' && (
-          <div className="flex flex-col items-center justify-center gap-2 h-48 text-center px-6">
-            <p className="text-sm font-medium text-muted-foreground">No outputs yet</p>
-            <p className="text-xs text-muted-foreground/60">Run training to see results here.</p>
-          </div>
-        )}
+      <div className="flex-1 flex flex-col items-center justify-center gap-2 py-16 text-center px-6">
+        <p className="text-[13px] font-medium text-muted-foreground">No results yet</p>
+        <p className="text-[11px] text-muted-foreground/50 leading-snug">
+          Run training to see how your agent performed.
+        </p>
       </div>
     </div>
   )
@@ -67,13 +39,13 @@ type Props = {
 export function BuilderPage({ initial, onBack }: Props) {
   const [blocks, setBlocks] = useState<Block[]>(initial.blocks)
   const [name, setName] = useState(initial.name)
-  const [training, setTraining] = useState<TrainingConfig>(DEFAULT_TRAINING)
   const [compiling, setCompiling] = useState(false)
   const [compileError, setCompileError] = useState<string | null>(null)
   const [savedFlash, setSavedFlash] = useState(false)
   const nameRef = useRef<HTMLInputElement>(null)
 
-  const workspaceJSON = useMemo(() => serializeWorkspace(blocks, training), [blocks, training])
+  const { visible: tutorialVisible, dismiss: dismissTutorial, show: showTutorial } = useTutorial()
+  const workspaceJSON = useMemo(() => serializeWorkspace(blocks), [blocks])
   const envBlockExists = blocks.some(b => b.type === 'env')
 
   const currentEnv = (): SavedEnv => ({
@@ -213,6 +185,18 @@ export function BuilderPage({ initial, onBack }: Props) {
         </span>
 
         <div className="flex items-center gap-2 ml-auto shrink-0">
+          <button
+            type="button"
+            onClick={showTutorial}
+            title="How it works"
+            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition-colors"
+            style={{ color: 'oklch(0.40 0.04 62)' }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'oklch(0.92 0.015 75)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+          >
+            <HelpCircle className="size-3.5" />
+            How it works
+          </button>
           <Button variant="outline" size="sm" onClick={handleSave} className="gap-1.5">
             {savedFlash
               ? <><Check className="size-3.5 text-emerald-600" /><span className="text-emerald-600">Saved</span></>
@@ -282,16 +266,7 @@ export function BuilderPage({ initial, onBack }: Props) {
 
         {/* Right panel */}
         <aside className="w-72 shrink-0 flex flex-col overflow-hidden border-l border-border">
-          {/* Training — always visible */}
-          <div className="shrink-0 border-b border-border p-4">
-            <TrainingPanel
-              config={training}
-              onChange={patch => setTraining(prev => ({ ...prev, ...patch }))}
-            />
-          </div>
-
-          {/* Tabs: JSON | Outputs */}
-          <RightTabs workspaceJSON={workspaceJSON} />
+          <RightPanel />
         </aside>
       </div>
     </div>

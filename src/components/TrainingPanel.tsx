@@ -23,7 +23,7 @@ export function TrainingPanel({ config, onChange }: Props) {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-        Training
+        Training Setup
       </p>
 
       {/* Model size */}
@@ -39,8 +39,8 @@ export function TrainingPanel({ config, onChange }: Props) {
                 onClick={() => onChange({ modelSize: value })}
                 className="flex-1 flex flex-col items-center gap-0.5 rounded-lg border py-2 text-center cursor-pointer select-none"
                 style={{
-                  backgroundColor: active ? '#2563eb' : 'transparent',
-                  borderColor:     active ? '#2563eb' : '#e2e8f0',
+                  backgroundColor: active ? '#BE5A2E' : 'transparent',
+                  borderColor:     active ? '#BE5A2E' : '#e2e8f0',
                   color:           active ? '#ffffff' : '#64748b',
                 }}
               >
@@ -68,7 +68,7 @@ export function TrainingPanel({ config, onChange }: Props) {
           value={config.steps}
           onChange={e => onChange({ steps: Number(e.target.value) })}
           className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-border"
-          style={{ accentColor: '#2563eb' }}
+          style={{ accentColor: '#BE5A2E' }}
         />
         <div className="flex justify-between text-[10px] text-muted-foreground">
           <span>100</span>

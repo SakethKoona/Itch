@@ -41,7 +41,7 @@ function ChildTaskCard({
   return (
     <div
       className="rounded-xl overflow-hidden"
-      style={{ boxShadow: `0 3px 0 0 ${taskColors.dark}` }}
+      style={{ boxShadow: `0 4px 0 0 ${taskColors.dark}, 0 6px 16px rgba(60,40,20,0.18), inset 0 1px 0 rgba(255,255,255,0.12)` }}
     >
       {/* Header */}
       <div
@@ -156,16 +156,16 @@ export function TaskSetBlock({ block, onUpdate, onDelete, onGripMouseDown, onPop
       style={{ paddingTop: KNOB_H, width: TASKSET_W }}
       onMouseDown={e => e.stopPropagation()}
     >
-      {/* Top socket — intrusion */}
+      {/* Top socket */}
       <div
         data-block-socket={block.id}
         className="absolute"
         style={{
           top: 0, left: KNOB_LEFT,
           width: KNOB_W, height: KNOB_H,
-          background: 'rgba(0,0,0,0.32)',
-          borderRadius: '4px 4px 0 0',
-          boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.35)',
+          background: 'rgba(0,0,0,0.38)',
+          borderRadius: '5px 5px 0 0',
+          boxShadow: 'inset 0 4px 8px rgba(0,0,0,0.55), inset 0 1px 3px rgba(0,0,0,0.4)',
         }}
       />
 
@@ -284,7 +284,7 @@ export function TaskSetBlock({ block, onUpdate, onDelete, onGripMouseDown, onPop
         </>
       )}
 
-      {/* Bottom peg — extrusion */}
+      {/* Bottom peg */}
       <div
         data-block-peg={block.id}
         className="absolute"
@@ -292,8 +292,8 @@ export function TaskSetBlock({ block, onUpdate, onDelete, onGripMouseDown, onPop
           bottom: -KNOB_H, left: KNOB_LEFT,
           width: KNOB_W, height: KNOB_H,
           backgroundColor: colors.bg,
-          borderRadius: '0 0 5px 5px',
-          boxShadow: `0 ${KNOB_H / 2}px 0 ${colors.dark}`,
+          borderRadius: '0 0 6px 6px',
+          boxShadow: `0 6px 0 ${colors.dark}, inset 0 2px 0 rgba(255,255,255,0.2), inset -2px 0 0 rgba(0,0,0,0.1), inset 2px 0 0 rgba(255,255,255,0.08)`,
           zIndex: 2,
         }}
       />

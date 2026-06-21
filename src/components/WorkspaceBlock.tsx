@@ -8,9 +8,9 @@ import { templateForType, isConnectable, hasTopSocket } from '@/lib/types'
 import { BLOCK_COLORS } from '@/lib/blockColors'
 import type { Block, TaskBlock, ToolBlock, EnvBlock, DatabaseBlock } from '@/lib/types'
 
-export const KNOB_H = 10
-export const KNOB_W = 36
-export const KNOB_LEFT = 20
+export const KNOB_H = 12
+export const KNOB_W = 40
+export const KNOB_LEFT = 18
 
 type Props = {
   block: Block
@@ -58,7 +58,7 @@ export function WorkspaceBlock({ block, taskIndex, onUpdate, onDelete, onGripMou
       style={{ paddingTop: showTopSocket ? KNOB_H : 0 }}
       onMouseDown={e => e.stopPropagation()}
     >
-      {/* Top socket — intrusion: a dark recess that receives the peg from above */}
+      {/* Top socket — a recessed hole the peg above slots into */}
       {showTopSocket && (
         <div
           data-block-socket={block.id}
@@ -66,9 +66,9 @@ export function WorkspaceBlock({ block, taskIndex, onUpdate, onDelete, onGripMou
           style={{
             top: 0, left: KNOB_LEFT,
             width: KNOB_W, height: KNOB_H,
-            background: 'rgba(0,0,0,0.32)',
-            borderRadius: '4px 4px 0 0',
-            boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.35)',
+            background: 'rgba(0,0,0,0.38)',
+            borderRadius: '5px 5px 0 0',
+            boxShadow: 'inset 0 4px 8px rgba(0,0,0,0.55), inset 0 1px 3px rgba(0,0,0,0.4)',
           }}
         />
       )}
@@ -77,8 +77,8 @@ export function WorkspaceBlock({ block, taskIndex, onUpdate, onDelete, onGripMou
       <div
         className="w-72 overflow-hidden"
         style={{
-          borderRadius: collapsed ? 12 : '12px 12px 12px 12px',
-          boxShadow: `0 5px 0 0 ${colors.dark}, 0 8px 24px rgba(0,0,0,0.18)`,
+          borderRadius: collapsed ? 12 : 12,
+          boxShadow: `0 6px 0 0 ${colors.dark}, 0 10px 28px rgba(60,40,20,0.22), inset 0 1px 0 rgba(255,255,255,0.15)`,
         }}
       >
         {/* Header — drag handle */}
@@ -140,7 +140,7 @@ export function WorkspaceBlock({ block, taskIndex, onUpdate, onDelete, onGripMou
         )}
       </div>
 
-      {/* Bottom peg — extrusion: raised tab that inserts into socket below */}
+      {/* Bottom peg — raised tab that slots into the socket below */}
       {connectable && (
         <div
           data-block-peg={block.id}
@@ -149,8 +149,8 @@ export function WorkspaceBlock({ block, taskIndex, onUpdate, onDelete, onGripMou
             bottom: -KNOB_H, left: KNOB_LEFT,
             width: KNOB_W, height: KNOB_H,
             backgroundColor: colors.bg,
-            borderRadius: '0 0 5px 5px',
-            boxShadow: `0 ${KNOB_H / 2}px 0 ${colors.dark}`,
+            borderRadius: '0 0 6px 6px',
+            boxShadow: `0 6px 0 ${colors.dark}, inset 0 2px 0 rgba(255,255,255,0.2), inset -2px 0 0 rgba(0,0,0,0.1), inset 2px 0 0 rgba(255,255,255,0.08)`,
             zIndex: 2,
           }}
         />
