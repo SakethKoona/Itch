@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { GripVertical, Trash2, ArrowUpRight, Plus, ChevronDown, ChevronRight } from 'lucide-react'
 import { TaskFields } from './BlockFields/TaskFields'
 import { BLOCK_COLORS } from '@/lib/blockColors'
-import { KNOB_H, KNOB_W, KNOB_LEFT, BlockSocket, BlockPeg } from './WorkspaceBlock'
+import { KNOB_H, BlockSocket, BlockPeg } from './WorkspaceBlock'
 import type { TaskSetBlock, TaskBlock } from '@/lib/types'
 
 const ARM_W = 20         // width of the left arm of the C
