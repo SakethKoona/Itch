@@ -55,7 +55,7 @@ function computeChain(
 }
 
 // Highlight / un-highlight a taskset mouth element directly (no React re-render)
-function setMouthHighlight(taskSetId: string | null, blocks: Block[]) {
+function setMouthHighlight(taskSetId: string | null, _blocks: Block[]) {
   document.querySelectorAll<HTMLElement>('[data-taskset-mouth]').forEach(el => {
     el.style.outline = ''
     el.style.outlineOffset = ''
