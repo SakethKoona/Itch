@@ -1,73 +1,159 @@
-# React + TypeScript + Vite
+# Itch — Visual RL Environment Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Build reinforcement learning training environments without writing code. Drag blocks onto a canvas, connect them together, and export a structured JSON spec your training backend can consume.
 
-Currently, two official plugins are available:
+**Live demo:** https://build-khaki-iota.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## What it does
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Itch gives you a Scratch-style block editor for describing RL environments. Instead of hand-authoring JSON or Python config, you visually assemble:
 
-## Expanding the ESLint configuration
+- **What world your agent lives in** — the Environment block sets the scene
+- **What tools your agent can use** — Tool blocks define callable actions with typed inputs
+- **What your agent should practice** — Task blocks specify prompts and graders
+- **How tasks are grouped** — TaskSet blocks bundle related tasks into a curriculum
+- **What data your agent can access** — Database blocks declare retrieval sources
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+When you're done, hit **Compile** and the workspace serializes to a structured JSON payload ready for your training backend.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Block types
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Block | Purpose |
+|---|---|
+| `Environment` | Defines the world context — description, constraints, overall goal |
+| `Tool` | A callable function the agent can invoke, with named typed inputs |
+| `Task` | A single training prompt with one or more graders (answer-check or state-check) |
+| `Task Set` | A C-block that groups tasks into a named curriculum |
+| `Database` | A named retrieval source the agent can query |
+
+---
+
+## Getting started
+
+```bash
+git clone <repo>
+cd build
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Opens at `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Building for production
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
 ```
+
+Output goes to `dist/`. Deploy anywhere that serves static files — the app is fully browser-side, no server required.
+
+---
+
+## Stack
+
+- **React 19** + TypeScript
+- **Vite 8** for bundling
+- **Tailwind v4** (CSS-only `@theme inline`, no config file)
+- **shadcn/ui** for base primitives
+- **Lucide React** for icons
+- **Montserrat Variable** font via `@fontsource-variable/montserrat`
+
+No backend is required to run the UI. The `/api/compile` endpoint is called when you hit Compile — point it at your own server or leave it disconnected to use the builder purely as a design tool.
+
+---
+
+## Project structure
+
+```
+src/
+├── pages/
+│   ├── DashboardPage.tsx       # environment list + templates
+│   └── BuilderPage.tsx         # the canvas editor
+├── components/
+│   ├── WorkspaceTab.tsx         # pan/zoom canvas, drag/snap logic
+│   ├── WorkspaceBlock.tsx       # individual block shell + SVG connectors
+│   ├── TaskSetBlock.tsx         # C-block for grouping tasks
+│   ├── BlocksTab.tsx            # block palette (left sidebar)
+│   ├── CompletenessChecker.tsx  # live validation overlay
+│   ├── TutorialOverlay.tsx      # first-time onboarding modal
+│   └── BlockFields/             # field editors per block type
+│       ├── EnvFields.tsx
+│       ├── ToolFields.tsx
+│       ├── TaskFields.tsx
+│       └── DatabaseFields.tsx
+└── lib/
+    ├── types.ts                 # block discriminated union + type guards
+    ├── serialize.ts             # Block[] → WorkspaceJSON
+    ├── api.ts                   # POST /api/compile
+    ├── storage.ts               # localStorage CRUD for saved environments
+    ├── templates.ts             # built-in starter templates
+    └── blockColors.ts           # per-block-type color palette
+```
+
+---
+
+## How blocks connect
+
+Blocks stack vertically via a peg-and-socket system (SVG trapezoid shapes, similar to Scratch). Drag a block near the bottom of another — when the snap indicator glows, release to connect. Connected blocks move as a chain.
+
+The `Environment` block can only appear once per workspace. All other block types are unlimited.
+
+Canvas controls:
+- **Scroll** to zoom
+- **Drag the background** to pan
+- **Drag a block's grip handle** to move it (and anything connected below it)
+
+---
+
+## Serialization format
+
+The Compile button POSTs this shape to `/api/compile`:
+
+```json
+{
+  "version": 1,
+  "blocks": [
+    { "type": "env", "description": "A customer support agent for a SaaS product" },
+    {
+      "type": "tool",
+      "name": "lookup_ticket",
+      "functionality": "Retrieves a support ticket by ID",
+      "inputs": [{ "name": "ticket_id", "type": "string", "description": "The ticket ID", "required": true }]
+    },
+    {
+      "type": "taskset",
+      "name": "Tier 1 Issues",
+      "tasks": [
+        {
+          "type": "task",
+          "prompt": "The customer says their account is locked. Help them.",
+          "graders": [{ "graderType": "answer", "weight": 1, "condition": "mentions account recovery" }]
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## Deployments
+
+| Branch | URL | Notes |
+|---|---|---|
+| `main` | https://build-khaki-iota.vercel.app | Stable |
+| `ui-experiments` | https://build-jji9dpvsz-saketh-s-projects2.vercel.app | Active UI work |
+
+---
+
+## Templates
+
+Three built-in templates to get started:
+
+- **Inventory Agent** — tool use + database retrieval for warehouse management
+- **Support Agent** — multi-turn task sets with answer graders
+- **Research Agent** — web search tools + state-based graders
